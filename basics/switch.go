@@ -1,5 +1,8 @@
-package main
+// Definition: switch is a control statement for multi-way branching based on the value of an expression.
+// How it works in Go: Uses the switch keyword with cases and optional default.
+// Purpose: To show how to use switch statements for cleaner branching logic.
 
+package main
 
 func main() {
 	// This is a simple program that uses a switch statement

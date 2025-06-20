@@ -1,3 +1,7 @@
+// Definition: An array is a fixed-size, ordered collection of elements of the same type.
+// How it works in Go: Arrays are declared with a fixed length and type, e.g., var arr [5]int.
+// Purpose: To show how to declare, initialize, and use arrays in Go.
+
 package main
 
 func main() {

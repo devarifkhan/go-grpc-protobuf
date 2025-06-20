@@ -1,3 +1,7 @@
+// Definition: A for loop is a control structure for repeated execution of a block of code.
+// How it works in Go: Go uses the for keyword for all loop types (traditional, while-like, infinite).
+// Purpose: To show different ways to use for loops in Go.
+
 package main
 
 func main() {

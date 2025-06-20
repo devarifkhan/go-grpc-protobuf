@@ -1,8 +1,12 @@
+// Definition: A while loop repeatedly executes a block as long as a condition is true.
+// How it works in Go: Go does not have a while keyword; use for with a condition instead.
+// Purpose: To show how to implement while-like loops using for in Go.
+
 package main
 
 func main() {
 
-	num :=1
+	num := 1
 	for num <= 10 {
 		println("Number:", num)
 		num++

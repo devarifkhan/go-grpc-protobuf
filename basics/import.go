@@ -1,3 +1,7 @@
+// Definition: The import statement is used to include packages in a Go program.
+// How it works in Go: Uses the import keyword to bring in standard or third-party packages.
+// Purpose: To show how to import and use packages in Go.
+
 package main
 
 import (
@@ -19,13 +23,13 @@ func main() {
 
 	fmt.Println("Success!")
 	fmt.Println("Response status:", resp.Status)
-	
+
 	// Read and display response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading response body:", err)
 		return
 	}
-	
+
 	fmt.Printf("Response body:\n%s\n", string(body))
 }
