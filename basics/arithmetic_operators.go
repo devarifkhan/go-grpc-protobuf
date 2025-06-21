@@ -1,7 +1,3 @@
-// Definition: Arithmetic operators perform mathematical operations like addition, subtraction, multiplication, division, and modulus.
-// How it works in Go: Go supports standard arithmetic operators (+, -, *, /, %) for numeric types.
-// Purpose: To demonstrate how to use arithmetic operators in Go.
-
 package main
 
 import "fmt"
