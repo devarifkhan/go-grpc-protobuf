@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type user struct {
@@ -25,10 +26,16 @@ func teachersHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 	switch r.Method {
 	case http.MethodGet:
+		fmt.Println("Path", r.URL.Path)
+		path := strings.TrimPrefix(r.URL.Path, "/teachers/")
+		userId := strings.TrimPrefix(path, "/")
+		fmt.Println("The user id is: ", userId)
+
 		_, err := w.Write([]byte("Hello GET Method on Teachers Route"))
 		if err != nil {
 			return
 		}
+
 		fmt.Println("Hello GET Method on Teachers Route")
 	case http.MethodPost:
 		_, err := w.Write([]byte("Hello POST Method on Teachers Route"))
@@ -83,11 +90,11 @@ func main() {
 	port := ":3000"
 
 	http.HandleFunc("/", rootHandler)
-	http.HandleFunc("/teachers", teachersHandler)
+	http.HandleFunc("/teachers/", teachersHandler)
 
-	http.HandleFunc("/students", studentsHandler)
+	http.HandleFunc("/students/", studentsHandler)
 
-	http.HandleFunc("/exces", ExcesHandler)
+	http.HandleFunc("/exces/", ExcesHandler)
 
 	fmt.Print("Server listening on port ", port)
 	err := http.ListenAndServe(port, nil)
