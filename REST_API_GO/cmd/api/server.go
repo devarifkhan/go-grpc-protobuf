@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 )
@@ -18,8 +16,10 @@ func main() {
 	port := ":3000"
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		//fmt.Fprintf(w, "Hello World")
-		//w.Write([]byte("Hello World"))
+		_, err := w.Write([]byte("Hello World"))
+		if err != nil {
+			return
+		}
 		fmt.Println("Hello World Route")
 	})
 	http.HandleFunc("/teachers", func(w http.ResponseWriter, r *http.Request) {
@@ -33,87 +33,28 @@ func main() {
 			}
 			fmt.Println("Hello GET Method on Teachers Route")
 		case http.MethodPost:
-			//parse the request body (x-www-form-urlencoded)
-			//err := r.ParseForm()
-			//if err != nil {
-			//	http.Error(w, "Error parsing form", http.StatusBadRequest)
-			//	fmt.Println("Error parsing form:", err)
-			//	return
-			//}
-			//fmt.Println("form", r.Form)
-			//
-			////prepare the response data
-			//response := make(map[string]interface{})
-			//for key, value := range r.Form {
-			//	response[key] = value[0]
-			//}
-
-			// RAW Body (json)
-			body, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, "Error reading body", http.StatusBadRequest)
-				fmt.Println("Error reading body:", err)
-				return
-			}
-			defer func(Body io.ReadCloser) {
-				err := Body.Close()
-				if err != nil {
-
-				}
-			}(r.Body)
-			fmt.Println("Raw Body:", string(body))
-
-			// if you expect JSON data, you can unmarshal it
-			var userInstance user
-			err = json.Unmarshal(body, &userInstance)
+			_, err := w.Write([]byte("Hello POST Method on Teachers Route"))
 			if err != nil {
 				return
 			}
-			fmt.Println("Unmarshalled JSON into an instance of user struct:", userInstance)
-
-			// prepare the response
-			response := make(map[string]interface{})
-			for key, value := range r.Form {
-				response[key] = value[0]
-			}
-
-			err = json.Unmarshal(body, &response)
-			if err != nil {
-				http.Error(w, "Error unmarshalling body", http.StatusBadRequest)
-				fmt.Println("Error unmarshalling body:", err)
-				return
-			}
-
-			fmt.Println("Unmarshalled JSON into a map:", response)
-
-			// Access the request details
-			fmt.Println("Body:", r.Body)
-			fmt.Println("Form:", r.Form)
-			fmt.Println("Header:", r.Header)
-			fmt.Println("Context:", r.Context())
-			fmt.Println("ContentLength:", r.ContentLength)
-			fmt.Println("Host:", r.Host)
-			fmt.Println("Method:", r.Method)
-			fmt.Println("Path:", r.URL.Path)
-			fmt.Println("Proto:", r.Proto)
-			fmt.Println("RemoteAddr:", r.RemoteAddr)
-			fmt.Println("RequestURI:", r.RequestURI)
-			fmt.Println("Scheme:", r.URL.Scheme)
-			fmt.Println("URL:", r.URL)
-			fmt.Println("UserAgent:", r.UserAgent())
-			fmt.Println("Trailer:", r.Trailer)
-			fmt.Println("TLS:", r.TLS)
-
-			//w.Write([]byte("Hello POST Method on Teachers Route"))
 			fmt.Println("Hello POST Method on Teachers Route")
 		case http.MethodPut:
-			//w.Write([]byte("Hello PUT Method on Teachers Route"))
+			_, err := w.Write([]byte("Hello PUT Method on Teachers Route"))
+			if err != nil {
+				return
+			}
 			fmt.Println("Hello PUT Method on Teachers Route")
 		case http.MethodPatch:
-			//w.Write([]byte("Hello PATCH Method on Teachers Route"))
+			_, err := w.Write([]byte("Hello PATCH Method on Teachers Route"))
+			if err != nil {
+				return
+			}
 			fmt.Println("Hello PATCH Method on Teachers Route")
 		case http.MethodDelete:
-			//w.Write([]byte("Hello DELETE Method on Teachers Route"))
+			_, err := w.Write([]byte("Hello DELETE Method on Teachers Route"))
+			if err != nil {
+				return
+			}
 			fmt.Println("Hello DELETE Method on Teachers Route")
 
 		}
