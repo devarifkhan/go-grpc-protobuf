@@ -96,6 +96,13 @@ func main() {
 			fmt.Println("Method:", r.Method)
 			fmt.Println("Path:", r.URL.Path)
 			fmt.Println("Proto:", r.Proto)
+			fmt.Println("RemoteAddr:", r.RemoteAddr)
+			fmt.Println("RequestURI:", r.RequestURI)
+			fmt.Println("Scheme:", r.URL.Scheme)
+			fmt.Println("URL:", r.URL)
+			fmt.Println("UserAgent:", r.UserAgent())
+			fmt.Println("Trailer:", r.Trailer)
+			fmt.Println("TLS:", r.TLS)
 
 			//w.Write([]byte("Hello POST Method on Teachers Route"))
 			fmt.Println("Hello POST Method on Teachers Route")
