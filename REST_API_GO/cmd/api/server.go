@@ -12,75 +12,82 @@ type user struct {
 	City string `json:"city"`
 }
 
+func rootHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Hello World"))
+	if err != nil {
+		return
+	}
+	fmt.Println("Hello World Route")
+}
+
+func teachersHandler(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println(r.Method)
+	switch r.Method {
+	case http.MethodGet:
+		_, err := w.Write([]byte("Hello GET Method on Teachers Route"))
+		if err != nil {
+			return
+		}
+		fmt.Println("Hello GET Method on Teachers Route")
+	case http.MethodPost:
+		_, err := w.Write([]byte("Hello POST Method on Teachers Route"))
+		if err != nil {
+			return
+		}
+		fmt.Println("Hello POST Method on Teachers Route")
+	case http.MethodPut:
+		_, err := w.Write([]byte("Hello PUT Method on Teachers Route"))
+		if err != nil {
+			return
+		}
+		fmt.Println("Hello PUT Method on Teachers Route")
+	case http.MethodPatch:
+		_, err := w.Write([]byte("Hello PATCH Method on Teachers Route"))
+		if err != nil {
+			return
+		}
+		fmt.Println("Hello PATCH Method on Teachers Route")
+	case http.MethodDelete:
+		_, err := w.Write([]byte("Hello DELETE Method on Teachers Route"))
+		if err != nil {
+			return
+		}
+		fmt.Println("Hello DELETE Method on Teachers Route")
+
+	}
+
+	_, err := w.Write([]byte("Teachers"))
+	if err != nil {
+		return
+	}
+
+}
+
+func studentsHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Students"))
+	if err != nil {
+		return
+	}
+	fmt.Println("Students Route")
+}
+
+func ExcesHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Exces"))
+	if err != nil {
+		return
+	}
+	fmt.Println("Exces Route")
+}
 func main() {
 	port := ":3000"
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Hello World"))
-		if err != nil {
-			return
-		}
-		fmt.Println("Hello World Route")
-	})
-	http.HandleFunc("/teachers", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", rootHandler)
+	http.HandleFunc("/teachers", teachersHandler)
 
-		fmt.Println(r.Method)
-		switch r.Method {
-		case http.MethodGet:
-			_, err := w.Write([]byte("Hello GET Method on Teachers Route"))
-			if err != nil {
-				return
-			}
-			fmt.Println("Hello GET Method on Teachers Route")
-		case http.MethodPost:
-			_, err := w.Write([]byte("Hello POST Method on Teachers Route"))
-			if err != nil {
-				return
-			}
-			fmt.Println("Hello POST Method on Teachers Route")
-		case http.MethodPut:
-			_, err := w.Write([]byte("Hello PUT Method on Teachers Route"))
-			if err != nil {
-				return
-			}
-			fmt.Println("Hello PUT Method on Teachers Route")
-		case http.MethodPatch:
-			_, err := w.Write([]byte("Hello PATCH Method on Teachers Route"))
-			if err != nil {
-				return
-			}
-			fmt.Println("Hello PATCH Method on Teachers Route")
-		case http.MethodDelete:
-			_, err := w.Write([]byte("Hello DELETE Method on Teachers Route"))
-			if err != nil {
-				return
-			}
-			fmt.Println("Hello DELETE Method on Teachers Route")
+	http.HandleFunc("/students", studentsHandler)
 
-		}
-
-		_, err := w.Write([]byte("Teachers"))
-		if err != nil {
-			return
-		}
-
-	})
-
-	http.HandleFunc("/students", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Students"))
-		if err != nil {
-			return
-		}
-		fmt.Println("Students Route")
-	})
-
-	http.HandleFunc("/exces", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Exces"))
-		if err != nil {
-			return
-		}
-		fmt.Println("Exces Route")
-	})
+	http.HandleFunc("/exces", ExcesHandler)
 
 	fmt.Print("Server listening on port ", port)
 	err := http.ListenAndServe(port, nil)
