@@ -69,10 +69,7 @@ func main() {
 			if err != nil {
 				return
 			}
-			fmt.Println("Unmarshalled JSON into a user struct:", userInstance)
-			fmt.Println("User Name:", userInstance.Name)
-			fmt.Println("User Age:", userInstance.Age)
-			fmt.Println("User City:", userInstance.City)
+			fmt.Println("Unmarshalled JSON into an instance of user struct:", userInstance)
 
 			// prepare the response
 			response := make(map[string]interface{})
@@ -88,6 +85,17 @@ func main() {
 			}
 
 			fmt.Println("Unmarshalled JSON into a map:", response)
+
+			// Access the request details
+			fmt.Println("Body:", r.Body)
+			fmt.Println("Form:", r.Form)
+			fmt.Println("Header:", r.Header)
+			fmt.Println("Context:", r.Context())
+			fmt.Println("ContentLength:", r.ContentLength)
+			fmt.Println("Host:", r.Host)
+			fmt.Println("Method:", r.Method)
+			fmt.Println("Path:", r.URL.Path)
+			fmt.Println("Proto:", r.Proto)
 
 			//w.Write([]byte("Hello POST Method on Teachers Route"))
 			fmt.Println("Hello POST Method on Teachers Route")
@@ -107,7 +115,7 @@ func main() {
 		if err != nil {
 			return
 		}
-		fmt.Println("Teachers Route")
+
 	})
 
 	http.HandleFunc("/students", func(w http.ResponseWriter, r *http.Request) {
