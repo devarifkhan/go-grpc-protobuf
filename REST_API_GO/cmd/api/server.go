@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
@@ -22,6 +23,37 @@ func main() {
 			w.Write([]byte("Hello GET Method on Teachers Route"))
 			fmt.Println("Hello GET Method on Teachers Route")
 		case http.MethodPost:
+			//parse the request body
+			err := r.ParseForm()
+			if err != nil {
+				http.Error(w, "Error parsing form", http.StatusBadRequest)
+				fmt.Println("Error parsing form:", err)
+				return
+			}
+			fmt.Println("form", r.Form)
+
+			//prepare the response data
+			response := make(map[string]interface{})
+			for key, value := range r.Form {
+				response[key] = value[0]
+			}
+
+			// RAW Body
+			body, err := io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "Error reading body", http.StatusBadRequest)
+				fmt.Println("Error reading body:", err)
+				return
+			}
+			defer func(Body io.ReadCloser) {
+				err := Body.Close()
+				if err != nil {
+
+				}
+			}(r.Body)
+			fmt.Println("Raw Body:", string(body))
+
+			fmt.Println("Processed Response Map:", response)
 			w.Write([]byte("Hello POST Method on Teachers Route"))
 			fmt.Println("Hello POST Method on Teachers Route")
 		case http.MethodPut:
