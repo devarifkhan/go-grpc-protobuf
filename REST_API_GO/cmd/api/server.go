@@ -87,10 +87,12 @@ func main() {
 	cert := "cert.pem"
 	key := "key.pem"
 
-	http.HandleFunc("/", rootHandler)
-	http.HandleFunc("/teachers/", teachersHandler)
+	mux := http.NewServeMux()
 
-	http.HandleFunc("/students/", studentsHandler)
+	mux.HandleFunc("/", rootHandler)
+	mux.HandleFunc("/teachers/", teachersHandler)
+
+	mux.HandleFunc("/students/", studentsHandler)
 
 	http.HandleFunc("/exces/", ExcesHandler)
 
@@ -100,7 +102,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:      port,
-		Handler:   nil,
+		Handler:   mux,
 		TLSConfig: tlsConfig,
 	}
 
