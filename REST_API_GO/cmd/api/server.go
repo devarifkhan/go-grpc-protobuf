@@ -1,10 +1,10 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 )
 
 type user struct {
@@ -26,11 +26,6 @@ func teachersHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 	switch r.Method {
 	case http.MethodGet:
-		fmt.Println("Path", r.URL.Path)
-		path := strings.TrimPrefix(r.URL.Path, "/teachers/")
-		userId := strings.TrimPrefix(path, "/")
-		fmt.Println("The user id is: ", userId)
-
 		_, err := w.Write([]byte("Hello GET Method on Teachers Route"))
 		if err != nil {
 			return
@@ -89,6 +84,9 @@ func ExcesHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	port := ":3000"
 
+	cert := "cert.pem"
+	key := "key.pem"
+
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/teachers/", teachersHandler)
 
@@ -96,8 +94,18 @@ func main() {
 
 	http.HandleFunc("/exces/", ExcesHandler)
 
+	tlsConfig := &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
+
+	server := &http.Server{
+		Addr:      port,
+		Handler:   nil,
+		TLSConfig: tlsConfig,
+	}
+
 	fmt.Print("Server listening on port ", port)
-	err := http.ListenAndServe(port, nil)
+	err := server.ListenAndServeTLS(cert, key)
 	if err != nil {
 		log.Fatal("Error starting server: ", err)
 	}
