@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"restapi/internal/api/middlewares"
+	mw "restapi/internal/api/middlewares"
 )
 
 type user struct {
@@ -103,7 +103,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:      port,
-		Handler:   middlewares.Cors(mux),
+		Handler:   mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Cors(mux))),
 		TLSConfig: tlsConfig,
 	}
 
