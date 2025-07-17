@@ -19,13 +19,7 @@ func SecurityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		w.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
 		w.Header().Set("X-Origin-Embedder-Policy", "require-corp")
-		w.Header().Set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), fullscreen=(self), payment=()")
-		w.Header().Set("Feature-Policy", "camera 'none'; microphone 'none'; geolocation 'none'; fullscreen 'self'; payment 'none'")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Max-Age", "86400")
-		w.Header().Set("Access-Control-Expose-Headers", "Content-Length, Content-Range")
 
 		next.ServeHTTP(w, r)
 	})

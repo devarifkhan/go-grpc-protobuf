@@ -103,7 +103,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:      port,
-		Handler:   middlewares.SecurityHeaders(mux),
+		Handler:   middlewares.Cors(mux),
 		TLSConfig: tlsConfig,
 	}
 
