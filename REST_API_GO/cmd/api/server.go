@@ -103,7 +103,13 @@ func main() {
 	}
 
 	r1 := mw.NewRateLimitter(5, time.Minute)
-	secureMux := r1.Middleware(mw.Compression(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Cors(mux)))))
+	hppOptions := mw.HTTPOptions{
+		CheckQuery:                  true,
+		CheckBody:                   true,
+		CheckBodyOnlyForContentType: "application/x-www-form-url-encoded",
+		Whitelist:                   []string{"sortBy", "sortOrder", "name", "age", "class"},
+	}
+	secureMux := mw.Hpp(hppOptions)(r1.Middleware(mw.Compression(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Cors(mux))))))
 
 	server := &http.Server{
 		Addr:      port,
