@@ -6,8 +6,9 @@ import (
 )
 
 func SecurityHeaders(next http.Handler) http.Handler {
+	fmt.Println("Security Headers Middleware...")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Security Headers Middleware")
+		fmt.Println("---Security Headers Middleware start---")
 		w.Header().Set("X-DNS-Prefetch-Control", "off")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("X-Frame-Options", "DENY")
@@ -22,7 +23,7 @@ func SecurityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
 		w.Header().Set("X-Origin-Embedder-Policy", "require-corp")
 		w.Header().Set("Access-Control-Max-Age", "86400")
-
 		next.ServeHTTP(w, r)
+		fmt.Println("---Security Headers Middleware end---")
 	})
 }
