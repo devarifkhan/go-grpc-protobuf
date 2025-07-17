@@ -15,6 +15,7 @@ type HTTPOptions struct {
 func Hpp(options HTTPOptions) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("HPP Middleware")
 			if options.CheckBody && r.Method == http.MethodGet && isCorrectContentType(r, options.CheckBodyOnlyForContentType) {
 				filterBodyParams(r, options.Whitelist)
 			}

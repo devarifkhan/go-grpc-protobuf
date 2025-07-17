@@ -109,7 +109,7 @@ func main() {
 		CheckBodyOnlyForContentType: "application/x-www-form-url-encoded",
 		Whitelist:                   []string{"sortBy", "sortOrder", "name", "age", "class"},
 	}
-	secureMux := mw.Hpp(hppOptions)(r1.Middleware(mw.Compression(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Cors(mux))))))
+	secureMux := mw.Cors(r1.Middleware(mw.ResponseTimeMiddleware(mw.Hpp(hppOptions)(r1.Middleware(mw.Compression(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mux))))))))
 
 	server := &http.Server{
 		Addr:      port,

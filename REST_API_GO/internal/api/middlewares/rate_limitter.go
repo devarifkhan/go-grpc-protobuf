@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"sync"
@@ -37,6 +38,7 @@ func (r *rateLimitter) resetVisitorCounts() {
 
 func (r *rateLimitter) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		fmt.Println("HPP Middleware")
 		r.mu.Lock()
 		defer r.mu.Unlock()
 
