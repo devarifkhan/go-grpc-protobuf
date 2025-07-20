@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	mw "restapi/internal/api/middlewares"
-	"time"
 )
 
 type user struct {
@@ -102,15 +101,16 @@ func main() {
 		MinVersion: tls.VersionTLS12,
 	}
 
-	r1 := mw.NewRateLimitter(5, time.Minute)
-	hppOptions := mw.HTTPOptions{
-		CheckQuery:                  true,
-		CheckBody:                   true,
-		CheckBodyOnlyForContentType: "application/x-www-form-url-encoded",
-		Whitelist:                   []string{"sortBy", "sortOrder", "name", "age", "class"},
-	}
-	secureMux := mw.Cors(r1.Middleware(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Compression(mw.Hpp(hppOptions)(mux))))))
-
+	//rl := mw.NewRateLimitter(5, time.Minute)
+	//hppOptions := mw.HTTPOptions{
+	//	CheckQuery:                  true,
+	//	CheckBody:                   true,
+	//	CheckBodyOnlyForContentType: "application/x-www-form-url-encoded",
+	//	Whitelist:                   []string{"sortBy", "sortOrder", "name", "age", "class"},
+	//}
+	// secureMux := mw.Cors(r1.Middleware(mw.ResponseTimeMiddleware(mw.SecurityHeaders(mw.Compression(mw.Hpp(hppOptions)(mux))))))
+	// secureMux := applyMiddlewareHandler(mux, mw.Hpp(hppOptions), mw.Compression, mw.SecurityHeaders, mw.ResponseTimeMiddleware, rl.Middleware, mw.Cors)
+	secureMux := mw.SecurityHeaders(mux)
 	server := &http.Server{
 		Addr:      port,
 		Handler:   secureMux,
@@ -122,4 +122,15 @@ func main() {
 	if err != nil {
 		log.Fatal("Error starting server: ", err)
 	}
+}
+
+type Middleware func(http.Handler) http.Handler
+
+func applyMiddlewareHandler(handler http.Handler, middlewares ...Middleware) http.Handler {
+
+	for _, middleware := range middlewares {
+		handler = middleware(handler)
+	}
+	return handler
+
 }
