@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	mw "restapi/internal/api/middlewares"
+	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -43,21 +45,53 @@ func init() {
 }
 
 func getTeachersHandler(w http.ResponseWriter, r *http.Request) {
-	teacherList := make([]Teacher, 0, len(teachers))
-	for _, teacher := range teachers {
-		teacherList = append(teacherList, teacher)
+
+	path := strings.TrimPrefix(r.URL.Path, "/teachers/")
+	idStr := strings.TrimPrefix(path, "/")
+	fmt.Println(idStr)
+
+	if idStr != "" {
+		firstName := r.URL.Query().Get("firstName")
+		lastName := r.URL.Query().Get("lastName")
+
+		teacherList := make([]Teacher, 0, len(teachers))
+		for _, teacher := range teachers {
+			if firstName != "" && teacher.FirstName == firstName && (lastName == "" || teacher.LastName == lastName) {
+				teacherList = append(teacherList, teacher)
+				continue
+			}
+			teacherList = append(teacherList, teacher)
+		}
+		response := struct {
+			Status string    `json:"status"`
+			Count  int       `json:"count"`
+			Data   []Teacher `json:"data"`
+		}{
+			Status: "success",
+			Count:  len(teacherList),
+			Data:   teacherList,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		err := json.NewEncoder(w).Encode(response)
+		if err != nil {
+			return
+		}
 	}
-	response := struct {
-		Status string    `json:"status"`
-		Count  int       `json:"count"`
-		Data   []Teacher `json:"data"`
-	}{
-		Status: "success",
-		Count:  len(teacherList),
-		Data:   teacherList,
+
+	// Handle Path parameters
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(response)
+
+	teacher, exists := teachers[id]
+	if !exists {
+		http.Error(w, "Teacher not found", http.StatusNotFound)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(teacher)
 	if err != nil {
 		return
 	}
