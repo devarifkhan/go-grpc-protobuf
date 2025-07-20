@@ -2,16 +2,65 @@ package main
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	mw "restapi/internal/api/middlewares"
+	"sync"
 )
 
-type user struct {
-	Name string `json:"name"`
-	Age  string `json:"age"`
-	City string `json:"city"`
+type Teacher struct {
+	ID        int
+	FirstName string
+	LastName  string
+	Class     string
+	Subject   string
+}
+
+var (
+	teachers = make(map[int]Teacher)
+	mutex    = &sync.Mutex{}
+	nextID   = 1
+)
+
+func init() {
+	teachers[nextID] = Teacher{
+		ID:        nextID,
+		FirstName: "John",
+		LastName:  "Doe",
+		Class:     "9A",
+		Subject:   "Math",
+	}
+	nextID++
+	teachers[nextID] = Teacher{
+		ID:        nextID,
+		FirstName: "Jane",
+		LastName:  "Smith",
+		Class:     "10A",
+		Subject:   "Algebra",
+	}
+}
+
+func getTeachersHandler(w http.ResponseWriter, r *http.Request) {
+	teacherList := make([]Teacher, 0, len(teachers))
+	for _, teacher := range teachers {
+		teacherList = append(teacherList, teacher)
+	}
+	response := struct {
+		Status string    `json:"status"`
+		Count  int       `json:"count"`
+		Data   []Teacher `json:"data"`
+	}{
+		Status: "success",
+		Count:  len(teacherList),
+		Data:   teacherList,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		return
+	}
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,12 +76,7 @@ func teachersHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 	switch r.Method {
 	case http.MethodGet:
-		_, err := w.Write([]byte("Hello GET Method on Teachers Route"))
-		if err != nil {
-			return
-		}
-
-		fmt.Println("Hello GET Method on Teachers Route")
+		getTeachersHandler(w, r)
 	case http.MethodPost:
 		_, err := w.Write([]byte("Hello POST Method on Teachers Route"))
 		if err != nil {
